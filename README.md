@@ -96,11 +96,6 @@ To create, configure, and deploy the function app:
 
 | Variable       | Value                                                                                   |
 |----------------|-----------------------------------------------------------------------------------------|
-| SP\_USERNAME   | Application ID of the service principal                                                 |
-| SP\_PASSWORD   | Key value of the service principal                                                      |
-| TENANTID       | Azure Active Directory tenant ID                                                        |
-| SUBSCRIPTIONID | Azure subscription ID                                                                   |
-| AZURECLOUD     | Either *AzureCloud* or *AzureUSGovernment*                                              |
 | FW1NAME        | Name of the virtual machine hosting the first NVA firewall instance                     |
 | FW2NAME        | Name of the virtual machine hosting the second NVA firewall instance                    |
 | FW1RGNAME      | Name of the resource group containing the first NVA firewall virtual machine            |
