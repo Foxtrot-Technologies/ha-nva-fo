@@ -9,7 +9,7 @@
   },
   "logging": {
     "logLevel": {
-      "Function.HttpTrigger1": "Trace",
-      "default": "Warning"
+      "default": "Trace"
     }
+  }
 }
