@@ -28,9 +28,7 @@
 #
 #   - Create an Azure timer function app
 #
-#   - Set the Azure function app settings with credentials
-#     SP_PASSWORD, SP_USERNAME, TENANTID, SUBSCRIPTIONID, AZURECLOUD must be added
-#     AZURECLOUD = "AzureCloud" or "AzureUSGovernment"
+#   - Provide the managed Identity under which the Function App runs with sufficient privileges
 #
 #   - Set Firewall VM names and Resource Group in the Azure function app settings
 #     FW1NAME, FW2NAME, FWMONITOR, FW1FQDN, FW1PORT, FW2FQDN, FW2PORT, FW1RGNAME, FW2RGNAME FWTRIES, FWDELAY, FWUDRTAG must be added
@@ -232,10 +230,8 @@ Function Get-Subscriptions
 # Main code block for Azure function app                       
 #--------------------------------------------------------------------------
 
-$Password = ConvertTo-SecureString $env:SP_PASSWORD -AsPlainText -Force
-$Credential = New-Object System.Management.Automation.PSCredential ($env:SP_USERNAME, $Password)
-$AzureEnv = Get-AzEnvironment -Name $env:AZURECLOUD
-Add-AzAccount -ServicePrincipal -Tenant $env:TENANTID -Credential $Credential -Subscription $env:SUBSCRIPTIONID -Environment $AzureEnv
+Connect-AzAccount -Identity
+
 
 $Context = Get-AzContext
 Set-AzContext -Context $Context
