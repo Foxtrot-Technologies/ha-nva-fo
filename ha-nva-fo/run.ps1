@@ -120,13 +120,13 @@ Function Start-Failover
 
     foreach ($RTable in $Res)
     {
-      $TableOrig = Get-AzRouteTable -ResourceGroupName $RTable.ResourceGroupName -Name $RTable.Name
-      $Table = $($TableOrig.clone())
-      
-      foreach ($RouteName in $Table.Routes)
+      $Table = Get-AzRouteTable -ResourceGroupName $RTable.ResourceGroupName -Name $RTable.Name
+     
+      for ($i = 0; $i -lt $Tables.Routes.Count; $i++ )
       {
+	$RouteName = $Tables.Routes[i]
         Write-Output -InputObject "Updating route: "
-        Write-Output -InputObject $RouteName
+        Write-Output -InputObject $RouteName.Name
 
         for ($i = 0; $i -lt $PrimaryInts.count; $i++)
         {
@@ -163,13 +163,12 @@ Function Start-Failback
 
     foreach ($RTable in $Res)
     {
-      $TableOrig = Get-AzRouteTable -ResourceGroupName $RTable.ResourceGroupName -Name $RTable.Name
-      $Table = $($TableOrig.clone())
+      $Table = Get-AzRouteTable -ResourceGroupName $RTable.ResourceGroupName -Name $RTable.Name
 
-      foreach ($RouteName in $Table.Routes)
+      for ($i = 0; $i -lt $Tables.Routes.Count; $i++ )
       {
         Write-Output -InputObject "Updating route: "
-        Write-Output -InputObject $RouteName
+        Write-Output -InputObject $RouteName.Name
 
         for ($i = 0; $i -lt $PrimaryInts.count; $i++)
         {
