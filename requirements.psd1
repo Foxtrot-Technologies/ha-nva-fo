@@ -4,7 +4,7 @@
 @{
     # For latest supported version, go to 'https://www.powershellgallery.com/packages/Az'. 
     # To use the Az module in your function app, please uncomment the line below.
-    'Az.Accounts' = '6.*'
-    'Az.Network' = '6.*'
-    'Az.Compute' = '6.*'
+    'Az.Accounts' = '2.*'
+    'Az.Network' = '4.*'
+    'Az.Compute' = '4.*'
 }
