@@ -7,9 +7,5 @@
     "id": "Microsoft.Azure.Functions.ExtensionBundle",
     "version": "[2.*, 3.0.0)"
   },
-  "logging": {
-    "logLevel": {
-      "default": "Trace"
-    }
-  }
+  "functionTimeout": "00:10:00"
 }
