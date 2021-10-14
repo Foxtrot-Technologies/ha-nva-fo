@@ -122,9 +122,9 @@ Function Start-Failover
     {
       $Table = Get-AzRouteTable -ResourceGroupName $RTable.ResourceGroupName -Name $RTable.Name
      
-      for ($i = 0; $i -lt $Tables.Routes.Count; $i++ )
+      for ($i = 0; $i -lt $Table.Routes.Count; $i++ )
       {
-	$RouteName = $Tables.Routes[i]
+	$RouteName = $Table.Routes[i]
         Write-Output -InputObject "Updating route: "
         Write-Output -InputObject $RouteName.Name
 
@@ -165,8 +165,9 @@ Function Start-Failback
     {
       $Table = Get-AzRouteTable -ResourceGroupName $RTable.ResourceGroupName -Name $RTable.Name
 
-      for ($i = 0; $i -lt $Tables.Routes.Count; $i++ )
+      for ($i = 0; $i -lt $Table.Routes.Count; $i++ )
       {
+	$RouteName = $Table.Routes[i]
         Write-Output -InputObject "Updating route: "
         Write-Output -InputObject $RouteName.Name
 
