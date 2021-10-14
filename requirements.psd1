@@ -7,4 +7,5 @@
     'Az.Accounts' = '2.*'
     'Az.Network' = '4.*'
     'Az.Compute' = '4.*'
+    'Az.Resources' = '4.*'
 }
