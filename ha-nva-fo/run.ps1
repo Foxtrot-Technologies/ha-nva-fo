@@ -162,7 +162,8 @@ Function Start-Failback
 
     foreach ($RTable in $Res)
     {
-      $Table = Get-AzRouteTable -ResourceGroupName $RTable.ResourceGroupName -Name $RTable.Name
+      $TableOrig = Get-AzRouteTable -ResourceGroupName $RTable.ResourceGroupName -Name $RTable.Name
+      $Table = $($TableOrig.clone())
 
       foreach ($RouteName in $Table.Routes)
       {
