@@ -6,4 +6,5 @@
     # To use the Az module in your function app, please uncomment the line below.
     'Az.Accounts' = '6.*'
     'Az.Network' = '6.*'
+    'Az.Compute' = '6.*'
 }

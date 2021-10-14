@@ -41,9 +41,9 @@
 #--------------------------------------------------------------------------
 param($myTimer)
 
-Import-Module Az 
 
 Write-Output -InputObject "HA NVA timer trigger function executed at:$(Get-Date)"
+Get-Module DnsClient
 
 #--------------------------------------------------------------------------
 # Set firewall monitoring variables here
