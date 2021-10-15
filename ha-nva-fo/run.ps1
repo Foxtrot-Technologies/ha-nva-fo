@@ -84,7 +84,8 @@ Function Send-AlertMessage ($Message)
 #    $MailTo = $env:FWMAILTO
 
 #    try { Send-MailMessage -SmtpServer $MailServers[1] -From $MailFrom -To $MailTo -Subject $Message -Body $Message }
-#    catch { Send-MailMessage -SmtpServer $MailServers[2] -From $MailFrom -To $MailTo -Subject $Mesage -Body $Message }
+#    atch { Send-MailMessage -SmtpServer $MailServers[2] -From $MailFrom -To $MailTo -Subject $Mesage -Body $Message }
+    Write-Output -InputObject $Message
 }
 
 Function Test-VMStatus ($VM, $FWResourceGroup) 
@@ -121,7 +122,8 @@ Function Start-Failover
     foreach ($RTable in $Res)
     {
       $Table = Get-AzRouteTable -ResourceGroupName $RTable.ResourceGroupName -Name $RTable.Name
-     
+      $changes = 0
+
       for ($a = 0; $a -lt $Table.Routes.Count; $a++ )
       {
 	$RouteName = $Table.Routes[$a]
@@ -137,19 +139,28 @@ Function Start-Failover
           }
           elseif($RouteName.NextHopIpAddress -eq $PrimaryInts[$i])
           {
+            $changes++
             Set-AzRouteConfig -Name $RouteName.Name  -NextHopType VirtualAppliance -RouteTable $Table -AddressPrefix $RouteName.AddressPrefix -NextHopIpAddress $SecondaryInts[$i] 
           }
         }
 
       }
   
-      $UpdateTable = [scriptblock]{param($Table) Set-AzRouteTable -RouteTable $Table}
-      &$UpdateTable $Table
+      if ($changes -gt 0) {
+        Write-Output -InputObject 'New Route Table'
+
+        $UpdateTable = [scriptblock]{param($Table) Set-AzRouteTable -RouteTable $Table}
+        &$UpdateTable $Table 
+
+        Send-AlertMessage -message "NVA Alert: Failover to Secondary FW2"
+
+      } else {
+        Write-Output -InputObject 'No Route Table Changes Made'
+      }
 
     }
   }
 
-  Send-AlertMessage -message "NVA Alert: Failover to Secondary FW2"
 
 }
 
@@ -164,6 +175,7 @@ Function Start-Failback
     foreach ($RTable in $Res)
     {
       $Table = Get-AzRouteTable -ResourceGroupName $RTable.ResourceGroupName -Name $RTable.Name
+      $changes = 0
 
       for ($a = 0; $a -lt $Table.Routes.Count; $a++ )
       {
@@ -180,19 +192,28 @@ Function Start-Failback
           }
           elseif($RouteName.NextHopIpAddress -eq $SecondaryInts[$i])
           {
+            $changes++
             Set-AzRouteConfig -Name $RouteName.Name  -NextHopType VirtualAppliance -RouteTable $Table -AddressPrefix $RouteName.AddressPrefix -NextHopIpAddress $PrimaryInts[$i]
           }  
         }
 
       }  
 
-      $UpdateTable = [scriptblock]{param($Table) Set-AzRouteTable -RouteTable $Table}
-      &$UpdateTable $Table 
+      if ($changes -gt 0) {
+        Write-Output -InputObject 'New Route Table'
+
+        $UpdateTable = [scriptblock]{param($Table) Set-AzRouteTable -RouteTable $Table}
+        &$UpdateTable $Table 
+
+        Send-AlertMessage -message "NVA Alert: Failback to Primary FW1"
+
+      } else {
+        Write-Output -InputObject 'No Route Table Changes Made'
+      }
 
     }
   }
 
-  Send-AlertMessage -message "NVA Alert: Failback to Primary FW1"
 
 }
 
