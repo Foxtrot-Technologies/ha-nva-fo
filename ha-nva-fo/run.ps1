@@ -126,24 +126,29 @@ Function Start-Failover
 
       for ($a = 0; $a -lt $Table.Routes.Count; $a++ )
       {
-	$RouteName = $Table.Routes[$a]
-        Write-Output -InputObject "Updating route: "
-        Write-Output -InputObject $RouteName.Name
+		$RouteName = $Table.Routes[$a]
+        if ($RouteName.Name -match 'HA$') {
+		
+			Write-Output -InputObject "Updating route: "
+			Write-Output -InputObject $RouteName.Name
 
-        for ($i = 0; $i -lt $PrimaryInts.count; $i++)
-        {
-          if($RouteName.NextHopIpAddress -eq $SecondaryInts[$i])
-          {
-            Write-Output -InputObject 'Secondary NVA is already ACTIVE' 
-            
-          }
-          elseif($RouteName.NextHopIpAddress -eq $PrimaryInts[$i])
-          {
-            $changes++
-            Set-AzRouteConfig -Name $RouteName.Name  -NextHopType VirtualAppliance -RouteTable $Table -AddressPrefix $RouteName.AddressPrefix -NextHopIpAddress $SecondaryInts[$i] 
-          }
-        }
-
+			for ($i = 0; $i -lt $PrimaryInts.count; $i++)
+			{
+			  if($RouteName.NextHopIpAddress -eq $SecondaryInts[$i])
+			  {
+				Write-Output -InputObject 'Secondary NVA is already ACTIVE' 
+				
+			  }
+			  elseif($RouteName.NextHopIpAddress -eq $PrimaryInts[$i])
+			  {
+				$changes++
+				Set-AzRouteConfig -Name $RouteName.Name  -NextHopType VirtualAppliance -RouteTable $Table -AddressPrefix $RouteName.AddressPrefix -NextHopIpAddress $SecondaryInts[$i] 
+			  }
+			}
+		}  else {
+			Write-Output -InputObject "Skipping non-HA route: "
+			Write-Output -InputObject $RouteName.Name
+		}
       }
   
       if ($changes -gt 0) {
@@ -179,24 +184,28 @@ Function Start-Failback
 
       for ($a = 0; $a -lt $Table.Routes.Count; $a++ )
       {
-	$RouteName = $Table.Routes[$a]
-        Write-Output -InputObject "Updating route: "
-        Write-Output -InputObject $RouteName.Name
+	  $RouteName = $Table.Routes[$a]
+		if ($RouteName.Name -match 'HA$') {
+			Write-Output -InputObject "Updating route: "
+			Write-Output -InputObject $RouteName.Name
 
-        for ($i = 0; $i -lt $PrimaryInts.count; $i++)
-        {
-          if($RouteName.NextHopIpAddress -eq $PrimaryInts[$i])
-          {
-            Write-Output -InputObject 'Primary NVA is already ACTIVE' 
-          
-          }
-          elseif($RouteName.NextHopIpAddress -eq $SecondaryInts[$i])
-          {
-            $changes++
-            Set-AzRouteConfig -Name $RouteName.Name  -NextHopType VirtualAppliance -RouteTable $Table -AddressPrefix $RouteName.AddressPrefix -NextHopIpAddress $PrimaryInts[$i]
-          }  
-        }
-
+			for ($i = 0; $i -lt $PrimaryInts.count; $i++)
+			{
+			  if($RouteName.NextHopIpAddress -eq $PrimaryInts[$i])
+			  {
+				Write-Output -InputObject 'Primary NVA is already ACTIVE' 
+			  
+			  }
+			  elseif($RouteName.NextHopIpAddress -eq $SecondaryInts[$i])
+			  {
+				$changes++
+				Set-AzRouteConfig -Name $RouteName.Name  -NextHopType VirtualAppliance -RouteTable $Table -AddressPrefix $RouteName.AddressPrefix -NextHopIpAddress $PrimaryInts[$i]
+			  }  
+			}
+		} else {
+			Write-Output -InputObject "Skipping non-HA route: "
+			Write-Output -InputObject $RouteName.Name
+		}
       }  
 
       if ($changes -gt 0) {

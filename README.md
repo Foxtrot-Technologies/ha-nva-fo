@@ -58,6 +58,8 @@ To set up the Azure resources:
     1.  For the name, use **nva\_ha\_udr**.
 
     2.  For the value, enter text that describes this deployment. You will need this value for the next set of steps (note that the value is the case-sensitive).
+	
+5.  Create Routes with names ending in "-HA".  Only routes with HA at the end of their name will be updated.  So you can have routes that always go via the primary or secondary device.
 
 ### Set up Azure Functions
 
