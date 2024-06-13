@@ -41,6 +41,8 @@
 #--------------------------------------------------------------------------
 param($myTimer)
 
+#Abort the run on any error, prevents script API issues causing failovers
+$ErrorActionPreference = "Stop"
 
 Write-Output -InputObject "HA NVA timer trigger function executed at:$(Get-Date)"
 Get-Module DnsClient
